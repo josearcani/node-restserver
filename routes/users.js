@@ -4,15 +4,25 @@
 
 const router = require('express').Router();
 
+const { check, body } = require('express-validator');
+
+const { validateFields } = require('../middlewares/validateFields');
+
 const { getUsers,
-        putUsers,
-        postUsers,
-        deleteUsers,
-        patchUsers } = require('../controllers/users');
+  putUsers,
+  postUsers,
+  deleteUsers,
+  patchUsers } = require('../controllers/users');
 
 router.get('/', getUsers)
 
-router.post('/', postUsers)
+router.post('/', [
+  body('name', 'The name is required').not().isEmpty(),
+  body('email', 'It is not a valid email').isEmail(),
+  body('password', 'The password must have 6 characters').isLength({ min: 6 }),
+  body('role', 'The role is not valid').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+  validateFields
+], postUsers)
 
 router.put('/:id', putUsers)
 
