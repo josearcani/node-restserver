@@ -36,7 +36,7 @@ const postUsers = async (req, res = response) => {
 
   // save to db
   await user.save();
-    
+  
   res.json({
     msg: 'post API - controller',
     user
