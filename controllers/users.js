@@ -20,14 +20,6 @@ const postUsers = async (req, res = response) => {
 
   const user = new User({ name, email, password, role });
 
-  //validate the email
-  const emailExists = await User.findOne({ email });
-  if (emailExists) {
-    return res.status(400).json({
-      msg: 'This email exists already'
-    });
-  }
-
   // hashing the password
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
