@@ -10,7 +10,7 @@ const getUsers = async (req = request, res = response) => {
   const { limit = 5, from = 0} = req.query
 
   const query = { state: true };
-  
+
   const [ total, users ] = await Promise.all([
     User.countDocuments(query),
     User.find(query)
@@ -61,13 +61,15 @@ const patchUsers = (req, res = response) => {
   });
 }
 
-const deleteUsers = (req, res = response) => {
+const deleteUsers = async (req, res = response) => {
   const { id } = req.params;
 
-  res.json({
-    msg: 'delete API - controller',
-    id
-  });
+  // Borrar fisicamente No recomendado
+  // const user = await User.findByIdAndDelete(id);
+
+  const user = await User.findByIdAndUpdate(id, { state: false });
+
+  res.json(user);
 }
 
 module.exports = {
