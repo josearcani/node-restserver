@@ -4,9 +4,12 @@
 
 const router = require('express').Router();
 
-const { validateJWT } = require('../middlewares/validate-jwt');
-const { validateFields } = require('../middlewares/validateFields');
-const { isAdmin, hasRole } = require('../middlewares/validate-roles');
+const { 
+  validateFields,
+  validateJWT,
+  isAdmin,
+  hasRole
+} = require('../middlewares');
 
 const { check, body, param } = require('express-validator');
 
