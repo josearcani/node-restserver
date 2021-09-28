@@ -49,7 +49,7 @@ const putUsers = async (req, res = response) => {
     data.password = bcrypt.hashSync(password, salt);
   }
 
-  const user = await User.findByIdAndUpdate(id, data)
+  const user = await User.findByIdAndUpdate(id, data, { new: true })
 
   res.json( user );
 }
@@ -67,7 +67,7 @@ const deleteUsers = async (req, res = response) => {
   // Borrar fisicamente No recomendado
   // const user = await User.findByIdAndDelete(id);
 
-  const user = await User.findByIdAndUpdate(id, { state: false });
+  const user = await User.findByIdAndUpdate(id, { state: false }, { new: true });
 
   res.json(user);
 }
