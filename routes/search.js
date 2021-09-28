@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const { search } = require('../controllers');
 
-router.get('/:product/:term', search)
+router.get('/:collection/:term', search)
 
 
 module.exports = router;
