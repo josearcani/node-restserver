@@ -54,6 +54,15 @@ const productExits = async (name1 = '') => {
   }
 }
 
+/* validamos que la colletion sea una válida por lo mandado desde routes */
+const allowedCollections = (collection = '', collections = []) => {
+  const isAllowed = collections.includes(collection);
+  if (!isAllowed) {
+    throw new Error(`The colletion ${collection} is not allowed. ${collections}`)
+  }
+  return true;
+}
+
 module.exports = {
   validRole,
   emailExists,
@@ -61,4 +70,5 @@ module.exports = {
   categoryExists,
   idProductExists,
   productExits,
+  allowedCollections,
 }

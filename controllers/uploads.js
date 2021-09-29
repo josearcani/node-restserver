@@ -1,13 +1,13 @@
+const path = require('path');
+const fs   = require('fs');
+
 const { response } = require("express");
 
 const { uploadFileToServer } = require("../helpers");
 
+const { Product, User } = require('../models');
 
 const uploadFile = async (req, res = response) => {
-
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  }
 
   try {
     // images
@@ -23,6 +23,56 @@ const uploadFile = async (req, res = response) => {
   }
 }
 
+const updateImage = async (req, res = response) => {
+
+  const { id, collection } = req.params;
+
+  let model;
+
+  switch (collection) {
+    case 'users':
+      model = await User.findById(id);
+      if (!model) {
+        return res.status(400).json({
+          msg: `The id ${id} does not exists in ${collection} collection`
+        })
+      }
+
+      break;
+  
+    case 'products':
+      model = await Product.findById(id);
+      if (!model) {
+        return res.status(400).json({
+          msg: `The id ${id} does not exists in ${collection} collection`
+        })
+      }
+      break;
+    default:
+      return res.status(500).json({ msg: 'not done yet'});
+  }
+
+  // limpiar imágenes del servidor
+  if (model.img) {
+    //verificar que la img existe en el servidor
+    const pathname = path.join(__dirname, '../uploads', collection, model.img);
+    if (fs.existsSync(pathname)) {
+      fs.unlinkSync(pathname);
+    }
+  }
+
+  // images
+  const filename = await uploadFileToServer(req.files, undefined, collection);
+  
+  model.img = filename;
+
+  // es como actualizar el documento con el nuevo dato
+  await model.save();
+
+  res.json(model);
+}
+
 module.exports = {
   uploadFile,
+  updateImage,
 }
